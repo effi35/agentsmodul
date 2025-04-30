@@ -1,0 +1,16 @@
+{
+  "name": "SoulFind",
+  "description": "מודול לאיתור כלי AI מובילים לפי תחומים",
+  "version": "1.0",
+  "features": [
+    "סריקה לפי קטגוריות: טקסט, תמונה, שמע, אוטומציה",
+    "הצגת תוצאות ממוינות",
+    "עדכון שוטף של הכלים החדשים ביותר"
+  ],
+  "categories": {
+    "טקסט": ["Notion AI", "Jasper", "Sudowrite"],
+    "תמונה": ["Remove.bg", "RunwayML", "TensorArt"],
+    "שמע": ["Whisper", "Otter.ai", "AssemblyAI"],
+    "אוטומציה": ["Make.com", "Zapier", "UiPath"]
+  }
+}

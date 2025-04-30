@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>תוצאות כלליות של סוכנים</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: 'Courier New', monospace;
+      padding: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #0f0;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #0f0;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <h1>כל תוצאות הריצה של הסוכנים</h1>
+  <table id="resultsTable">
+    <thead>
+      <tr>
+        <th>Agent ID</th>
+        <th>Status</th>
+        <th>Output</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script src="js/resultsLoader.js"></script>
+</body>
+</html>

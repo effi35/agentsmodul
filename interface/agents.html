@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>ניהול סוכנים - ShayAI</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #0f0;
+      font-family: 'Courier New', monospace;
+      padding: 20px;
+      direction: rtl;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: #222;
+      color: #0f0;
+    }
+    th, td {
+      border: 1px solid #0f0;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #0f0;
+      color: #000;
+    }
+    button {
+      background-color: #0f0;
+      color: #111;
+      padding: 5px 10px;
+      margin: 2px;
+      cursor: pointer;
+      border: none;
+    }
+    button:hover {
+      background-color: #0c0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>לוח ניהול הסוכנים</h1>
+
+  <table id="agentsTable">
+    <thead>
+      <tr>
+        <th>מספר סוכן</th>
+        <th>שם</th>
+        <th>תיאור</th>
+        <th>מצב מורחב</th>
+        <th>משימות</th>
+        <th>סטטוס</th>
+        <th>פעולות</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- יתמלא דינאמית -->
+    </tbody>
+  </table>
+
+  <script>
+    // טוען את כל הסוכנים ומכניס אותם לטבלה
+    async function fetchAgents() {
+      try {
+        const response = await fetch('/api/agents');
+        const agents = await response.json();
+        const tbody = document.querySelector('#agentsTable tbody');
+        tbody.innerHTML = '';
+
+        agents.forEach(agent => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${agent.id}</td>
+            <td>${agent.name || '---'}</td>
+            <td>${agent.description || '---'}</td>
+            <td>${agent.extended ? 'כן' : 'לא'}</td>
+            <td>${agent.tasks?.map(t => t.name).join(', ') || '---'}</td>
+            <td style="color: ${agent.status === 'Success' ? 'lightgreen' : agent.status === 'Failed' ? 'red' : '#fff'}">
+              ${agent.status || 'בהמתנה'}
+            </td>
+            <td>
+              <button onclick="runAgentNow('${agent.id}')">הפעל</button>
+              <button onclick="sendResult('${agent.id}')">שלח תוצאה</button>
+              <button onclick="deleteAgent('${agent.id}')">מחק</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (error) {
+        console.error('שגיאה בטעינת סוכנים:', error);
+      }
+    }
+
+    // מחיקת סוכן
+    async function deleteAgent(agentId) {
+      if (confirm('אתה בטוח שברצונך למחוק את הסוכן?')) {
+        const res = await fetch(`/api/agents/${agentId}`, { method: 'DELETE' });
+        if (res.ok) fetchAgents();
+        else alert('שגיאה במחיקה');
+      }
+    }
+
+    // שליחת תוצאה של סוכן במייל
+    async function sendResult(agentId) {
+      const res = await fetch(`/api/agents/${agentId}/send`, { method: 'POST' });
+      alert(res.ok ? 'תוצאה נשלחה למייל' : 'שליחה נכשלה');
+    }
+
+    // הרצת סוכן מיידית
+    async function runAgentNow(agentId) {
+      const res = await fetch(`/run-agent-now/${agentId}`, { method: 'POST' });
+      alert(res.ok ? 'הסוכן הופעל' : 'הפעלה נכשלה');
+      fetchAgents();
+    }
+
+    // טען ברגע שהדף מוכן
+    window.onload = fetchAgents;
+  </script>
+
+</body>
+</html>
